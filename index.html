@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>Subtitlemarine</title>
+    <link rel="stylesheet" href="assets/css/bootstrap.min.css">
+    <link rel="stylesheet" href="assets/css/default.css">
+  </head>
+  <body :class="{ 'fullscreen': isFullScreen }">
+    <div id="app">
+      <nav class="navbar navbar-dark" :class="{ 'bg-secondary': isFullScreen }">
+        <form class="form-inline">
+          <button type="button" class="btn btn-sm btn-dark window-btn mx-1" title="菜单" data-toggle="dropdown" ><i class="material-icons">menu</i></button>
+          <div class="dropdown-menu">
+            <a class="dropdown-item" href="#" v-for="(lottery, i) in lotteries" :class="{ active: index == i }" @click="select(i)">{{lottery.name}}</a>
+          </div>
+          <button type="button" class="btn btn-sm btn-dark window-btn mx-1" title="刷新" @click="refresh()"><i class="material-icons">refresh</i></button>
+          <button type="button" class="btn btn-sm btn-dark window-btn mx-1" title="开始" v-if="current" @click="start()" :disabled="current.state == 2"><i class="material-icons">{{current.state == 1 ? "stop" : "play_arrow"}}</i></button>
+        </form>
+        <span class="text-white" style="display: none">标题</span>
+        <form class="form-inline my-2 my-lg-0">
+          <button type="button" class="btn btn-sm btn-dark window-btn mx-1" @click="ipcSend('minimize')"><i class="material-icons">remove</i></button>
+          <button type="button" class="btn btn-sm btn-dark window-btn mx-1" @click="fullScreen()"><i class="material-icons">{{isFullScreen ? "fullscreen_exit" : "crop_square"}}</i></button>
+          <button type="button" class="btn btn-sm btn-dark window-btn mx-1" @click="ipcSend('close')"><i class="material-icons">close</i></button>
+        </form>
+      </nav>
+      <main class="bg-secondary" v-if="current">
+        <div class="container">
+          <h2 class="font-weight-bold text-center my-5 text-light" style="letter-spacing: 8px">{{current.name}}</h2>
+          <div class="py-5">
+            <h3 class="text-center py-3 text-white" v-for="line in current.display">{{line}}</h3>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+    <script>
+      // You can also require other files to run in this process
+
+      require('./renderer.js')
+    </script>
+  </body>
+</html>
